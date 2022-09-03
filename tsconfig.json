@@ -21,7 +21,8 @@
       "@Hooks/*": ["/hooks/*"],
       "@Pages/*": ["/pages/*"],
       "@Components/*": ["/components/*"],
-      "@Axios/*": ["/axios/*"]
+      "@Axios/*": ["/axios/*"],
+      "@Guard/*": ["/guard/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

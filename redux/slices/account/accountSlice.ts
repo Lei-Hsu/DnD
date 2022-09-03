@@ -48,9 +48,23 @@ export const accountSlice = createSlice({
         }
       }
     },
+    logout: (state) => {
+      state.user = {
+        request: {
+          loading: false,
+          loaded: true,
+          hasError: false,
+          error: '',
+        },
+        data: {
+          login: false,
+          name: ''
+        }
+      }
+    }
   },
 });
 
-export const { login, testClick } = accountSlice.actions;
+export const { login, testClick, logout } = accountSlice.actions;
 
 export default accountSlice.reducer;
