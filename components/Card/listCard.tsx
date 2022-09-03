@@ -3,6 +3,7 @@ import React from 'react';
 import { DoubleLeftOutlined, LineOutlined } from '@ant-design/icons';
 
 export interface ListCardProps {
+  id: number;
   title: string;
   account: string;
   types: string;
@@ -17,6 +18,7 @@ enum EmergencyType {
   Normal = "normal",
 }
 const ListCard = ({
+  id,
   title,
   account,
   types,
@@ -38,7 +40,7 @@ const ListCard = ({
   };
 
   return (
-    <div className="bg-white rounded-sm shadow-sm px-5 py-3">
+    <div className="bg-white rounded-sm shadow-sm px-5 py-3 mb-1">
       <h3 className="text-slate-600 font-bold">{title}</h3>
       <div className="flex items-center">
         <div className="flex items-center space-x-3">

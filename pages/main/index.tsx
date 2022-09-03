@@ -1,8 +1,10 @@
 import React from 'react';
+import { resetServerContext } from 'react-beautiful-dnd';
 
 import { ListCardProps } from 'components/Card/listCard';
 import { useAppDispatch, useAppSelector } from 'hooks/hooks';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next/types';
 
 import { logout } from '@Redux/slices/account/accountSlice';
 import { RootState } from '@Redux/store';
@@ -10,15 +12,18 @@ import { RootState } from '@Redux/store';
 import List from '../../components/List';
 
 const Mock: {
+  id: number;
   title: string;
   number: number;
   data: ListCardProps[];
 }[] = [
   {
+    id: 1,
     title: "TO DO",
     number: 0,
     data: [
       {
+        id: 1,
         title: "Implement Redux",
         account: "John Doe",
         types: "work",
@@ -28,6 +33,7 @@ const Mock: {
           "https://avatars.dicebear.com/api/male/john.svg?background=%230000ff",
       },
       {
+        id: 2,
         title: "Implement Network",
         account: "John Doe",
         types: "personal",
@@ -39,11 +45,13 @@ const Mock: {
     ],
   },
   {
+    id: 2,
     title: "IN PROGRESS",
     number: 0,
     data: [
       {
-        title: "Implement Network",
+        id: 3,
+        title: "Implement Network12",
         account: "John Doe",
         types: "personal",
         emergency: "low",
@@ -54,10 +62,12 @@ const Mock: {
     ],
   },
   {
+    id: 3,
     title: "DONE",
     number: 0,
     data: [
       {
+        id: 4,
         title: "Implement Network",
         account: "John Doe",
         types: "personal",
@@ -69,10 +79,12 @@ const Mock: {
     ],
   },
   {
+    id: 4,
     title: "READY TO DELETE",
     number: 0,
     data: [
       {
+        id: 5,
         title: "Implement Network",
         account: "John Doe",
         types: "personal",
@@ -85,7 +97,7 @@ const Mock: {
   },
 ];
 
-const Main = () => {
+const Main = (props: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user } = useAppSelector((state: RootState) => state.account);
@@ -110,9 +122,10 @@ const Main = () => {
       </div>
       {/* Content */}
       <div className="p-5 grid sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
-        {Mock.map((item) => (
+        {Mock.map((item, index) => (
           <List
-            key={item.title}
+            key={item.id}
+            id={item.id}
             title={item.title}
             total={item.number}
             data={item.data}
@@ -123,4 +136,10 @@ const Main = () => {
   );
 };
 
-export default React.memo(Main);
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  resetServerContext(); // 如果要使用 Drag and Drop 功能，必須加入此行
+
+  return { props: { data: [] } };
+};
+
+export default Main;
