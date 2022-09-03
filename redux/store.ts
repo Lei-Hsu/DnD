@@ -1,8 +1,10 @@
-import { configureStore, ThunkAction } from "@reduxjs/toolkit";
-import { Action } from "redux";
-import createSagaMiddleware from "@redux-saga/core";
-import { rootReducer } from "./rootSlices";
-import { rootSaga } from "./rootSaga";
+import { Action } from 'redux';
+
+import createSagaMiddleware from '@redux-saga/core';
+import { configureStore, ThunkAction } from '@reduxjs/toolkit';
+
+import { rootSaga } from './rootSaga';
+import { rootReducer } from './rootSlices';
 
 const sagaMiddleware = createSagaMiddleware();
 
