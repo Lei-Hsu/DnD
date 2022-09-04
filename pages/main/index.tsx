@@ -4,7 +4,7 @@ import { DragDropContext, DropResult, resetServerContext } from 'react-beautiful
 import { Input } from 'antd';
 import { useAppDispatch, useAppSelector } from 'hooks/hooks';
 import { useRouter } from 'next/router';
-import { GetStaticProps } from 'next/types';
+import { GetServerSideProps } from 'next/types';
 
 import { SearchOutlined } from '@ant-design/icons';
 import { logout } from '@Redux/slices/account/accountSlice';
@@ -113,12 +113,12 @@ const Main = (props: any) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await fetch("http://localhost:3000/api/main");
   const data = await res.json();
   resetServerContext(); // 如果要使用 Drag and Drop 功能，必須加入此行
 
-  return { props: { data }, revalidate: 60, fallback: true };
+  return { props: { data } };
 };
 
 export default Main;
