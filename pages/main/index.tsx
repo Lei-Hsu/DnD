@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DragDropContext, DropResult, resetServerContext } from 'react-beautiful-dnd';
 
 import { Input } from 'antd';
 import { useAppDispatch, useAppSelector } from 'hooks/hooks';
 import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next/types';
+import { GetStaticProps } from 'next/types';
 
 import { SearchOutlined } from '@ant-design/icons';
 import { logout } from '@Redux/slices/account/accountSlice';
 import { openEditCardModal } from '@Redux/slices/global/globalSlice';
-import { dragListCard } from '@Redux/slices/main/mainSlice';
+import { dragListCard, getDndList } from '@Redux/slices/main/mainSlice';
 import { RootState } from '@Redux/store';
 
 import List from '../../components/List';
@@ -22,10 +22,14 @@ export interface DropProps {
   source: { droppableId?: string; index?: number };
 }
 
-const Main = () => {
+const Main = (props: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const dndList = useAppSelector((state: RootState) => state.main.dndList.data);
+
+  useEffect(() => {
+    dispatch(getDndList(props.data));
+  }, [dispatch, props]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -107,10 +111,12 @@ const Main = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getStaticProps: GetStaticProps = async (context) => {
+  const res = await fetch("http://localhost:3000/api/main");
+  const data = await res.json();
   resetServerContext(); // 如果要使用 Drag and Drop 功能，必須加入此行
 
-  return { props: { data: [] } };
+  return { props: { data }, revalidate: 60 };
 };
 
 export default Main;
