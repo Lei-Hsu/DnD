@@ -1,110 +1,48 @@
 import React from 'react';
-import { resetServerContext } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, resetServerContext } from 'react-beautiful-dnd';
 
-import { ListCardProps } from 'components/Card/listCard';
 import { useAppDispatch, useAppSelector } from 'hooks/hooks';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next/types';
 
 import { logout } from '@Redux/slices/account/accountSlice';
+import { dragListCard } from '@Redux/slices/main/mainSlice';
 import { RootState } from '@Redux/store';
 
 import List from '../../components/List';
 
-const Mock: {
-  id: number;
-  title: string;
-  number: number;
-  data: ListCardProps[];
-}[] = [
-  {
-    id: 1,
-    title: "TO DO",
-    number: 0,
-    data: [
-      {
-        id: 1,
-        title: "Implement Redux",
-        account: "John Doe",
-        types: "work",
-        emergency: "high",
-        cardId: "NUC-1",
-        image:
-          "https://avatars.dicebear.com/api/male/john.svg?background=%230000ff",
-      },
-      {
-        id: 2,
-        title: "Implement Network",
-        account: "John Doe",
-        types: "personal",
-        emergency: "normal",
-        cardId: "NUC-2",
-        image:
-          "https://avatars.dicebear.com/api/male/john.svg?background=%230000ff",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "IN PROGRESS",
-    number: 0,
-    data: [
-      {
-        id: 3,
-        title: "Implement Network12",
-        account: "John Doe",
-        types: "personal",
-        emergency: "low",
-        cardId: "NUC-2",
-        image:
-          "https://avatars.dicebear.com/api/male/john.svg?background=%230000ff",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "DONE",
-    number: 0,
-    data: [
-      {
-        id: 4,
-        title: "Implement Network",
-        account: "John Doe",
-        types: "personal",
-        emergency: "low",
-        cardId: "NUC-2",
-        image:
-          "https://avatars.dicebear.com/api/male/john.svg?background=%230000ff",
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "READY TO DELETE",
-    number: 0,
-    data: [
-      {
-        id: 5,
-        title: "Implement Network",
-        account: "John Doe",
-        types: "personal",
-        emergency: "low",
-        cardId: "NUC-2",
-        image:
-          "https://avatars.dicebear.com/api/male/john.svg?background=%230000ff",
-      },
-    ],
-  },
-];
+export interface DropProps {
+  destination: {
+    droppableId?: string;
+    index?: number;
+  };
+  source: { droppableId?: string; index?: number };
+}
 
-const Main = (props: any) => {
+const Main = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { user } = useAppSelector((state: RootState) => state.account);
+  const dndList = useAppSelector((state: RootState) => state.main.dndList.data);
 
   const handleLogout = () => {
     dispatch(logout());
     router.push("/");
+  };
+
+  const handleDragEnd = (e: DropResult) => {
+    const { destination, source } = e;
+    dispatch(
+      dragListCard({
+        destination: {
+          droppableId: destination?.droppableId,
+          index: destination?.index,
+        },
+        source: {
+          droppableId: source?.droppableId,
+          index: source?.index,
+        },
+      })
+    );
   };
 
   return (
@@ -121,17 +59,19 @@ const Main = (props: any) => {
         </div>
       </div>
       {/* Content */}
-      <div className="p-5 grid sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
-        {Mock.map((item, index) => (
-          <List
-            key={item.id}
-            id={item.id}
-            title={item.title}
-            total={item.number}
-            data={item.data}
-          />
-        ))}
-      </div>
+      <main className="p-5 grid sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <DragDropContext onDragEnd={(e: DropResult) => handleDragEnd(e)}>
+          {dndList?.map((item) => (
+            <List
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              total={item.number}
+              data={item.data}
+            />
+          ))}
+        </DragDropContext>
+      </main>
     </div>
   );
 };

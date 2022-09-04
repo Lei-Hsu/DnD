@@ -1,4 +1,5 @@
 import accountReducer from '@Redux/slices/account/accountSlice';
+import mainReducer from '@Redux/slices/main/mainSlice';
 import { combineReducers } from '@reduxjs/toolkit';
 
 export interface SliceRequest {
@@ -10,4 +11,5 @@ export interface SliceRequest {
 
 export const rootReducer = combineReducers({
   account: accountReducer,
+  main: mainReducer,
 });
