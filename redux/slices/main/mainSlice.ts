@@ -1,4 +1,4 @@
-import { ListCardProps } from 'components/Card/listCard';
+import { emergencyType, ListCardProps } from 'components/Card/listCard';
 import { DropProps } from 'pages/main';
 
 import { SliceRequest } from '@Redux/rootSlices';
@@ -150,9 +150,25 @@ export const mainSlice = createSlice({
         state.dndList.data[Number(destination.droppableId) - 1].data = destinationResult
       }
     },
+    addNewCard: (state, action: PayloadAction<{ title: string, emergency: emergencyType }>) => {
+      const { title, emergency } = action.payload
+      const copyState = JSON.parse(JSON.stringify(state.dndList))
+      const newCard: ListCardProps = {
+        id: Math.floor(Math.random() * 1000),
+        title,
+        account: "John Doe",
+        types: "personal",
+        emergency,
+        cardId: `NUC-${Math.floor(Math.random() * 1000)}`,
+        image:
+          "https://avatars.dicebear.com/api/male/john.svg?background=%230000ff"
+      }
+      copyState.data[0].data.push(newCard)
+      state.dndList = copyState
+    },
   }
 });
 
-export const { dragListCard } = mainSlice.actions;
+export const { dragListCard, addNewCard } = mainSlice.actions;
 
 export default mainSlice.reducer;

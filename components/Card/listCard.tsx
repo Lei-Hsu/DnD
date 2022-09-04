@@ -2,17 +2,19 @@ import React from 'react';
 
 import { DoubleLeftOutlined, LineOutlined } from '@ant-design/icons';
 
+export type emergencyType = "high" | "low" | "normal";
+
 export interface ListCardProps {
   id: number;
   title: string;
   account: string;
   types: string;
-  emergency: "high" | "low" | "normal";
+  emergency: emergencyType;
   cardId: string;
   image?: string;
 }
 
-enum EmergencyType {
+export enum EmergencyTypeEnum {
   High = "high",
   Low = "low",
   Normal = "normal",
@@ -28,11 +30,11 @@ const ListCard = ({
 }: ListCardProps) => {
   const convertType = (emergency: string) => {
     switch (emergency) {
-      case EmergencyType.High:
+      case EmergencyTypeEnum.High:
         return <DoubleLeftOutlined className="rotate-90 text-red-600" />;
-      case EmergencyType.Low:
+      case EmergencyTypeEnum.Low:
         return <DoubleLeftOutlined className="-rotate-90 text-blue-600" />;
-      case EmergencyType.Normal:
+      case EmergencyTypeEnum.Normal:
         return <LineOutlined className="text-yellow-300" />;
       default:
         return "bg-blue-500";

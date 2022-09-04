@@ -1,10 +1,12 @@
 import type { AppProps } from "next/app";
 import { Provider } from 'react-redux';
 
+import EditCardModal from 'components/EditCard';
 import Head from 'next/head';
 
 import store from '../redux/store';
 
+import 'antd/dist/antd.css';
 import '@Style/globals.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -16,6 +18,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Component {...pageProps} />
+
+      {/* Global Modal */}
+      <EditCardModal />
     </Provider>
   );
 }
