@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { emergencyType, EmergencyTypeEnum } from 'components/Card/listCard';
@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/hooks';
 
 import { DoubleLeftOutlined, LineOutlined } from '@ant-design/icons';
 import { closeEditCardModal } from '@Redux/slices/global/globalSlice';
-import { addNewCard } from '@Redux/slices/main/mainSlice';
+import { addNewCard, clearOpenCard, deleteCard } from '@Redux/slices/main/mainSlice';
 
 const EmergencyTypeOptions = [
   {
@@ -34,10 +34,24 @@ const EditCard = () => {
   const { visible, width, type, title } = useAppSelector(
     (state) => state.global.editCardModal
   );
+  const cardData = useAppSelector((state) => state.main.openCard.data);
+
+  useEffect(() => {
+    const { title, emergency } = cardData;
+    if (title && emergency) {
+      form.setFieldsValue({ title, emergency });
+    }
+  }, [cardData, form]);
 
   const handleCloseModal = () => {
     dispatch(closeEditCardModal());
+    dispatch(clearOpenCard());
     form.resetFields();
+  };
+
+  const handleDeleteCard = () => {
+    dispatch(deleteCard({ id: cardData.id as number }));
+    handleCloseModal();
   };
 
   const onFinish = (e: { title: string; emergency: emergencyType }) => {
@@ -84,17 +98,28 @@ const EditCard = () => {
             })}
           </Select>
         </Form.Item>
-        <div className="flex justify-end space-x-2">
-          <Button type="primary" danger onClick={handleCloseModal}>
-            取消
-          </Button>
-          <Button htmlType="submit" type="primary" className="bg-blue-500">
-            確認
-          </Button>
+        <div
+          className={`flex ${
+            type === "edit" ? " justify-between" : " justify-end"
+          }`}
+        >
+          {type === "edit" && (
+            <Button type="primary" danger onClick={handleDeleteCard}>
+              刪除
+            </Button>
+          )}
+          <div className="space-x-2">
+            <Button type="primary" danger onClick={handleCloseModal}>
+              取消
+            </Button>
+            <Button htmlType="submit" type="primary" className="bg-blue-500">
+              確認
+            </Button>
+          </div>
         </div>
       </Form>
     </Modal>
   );
 };
 
-export default EditCard;
+export default React.memo(EditCard);

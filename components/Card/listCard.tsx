@@ -1,6 +1,10 @@
 import React from 'react';
 
+import { useAppDispatch } from 'hooks/hooks';
+
 import { DoubleLeftOutlined, LineOutlined } from '@ant-design/icons';
+import { openEditCardModal } from '@Redux/slices/global/globalSlice';
+import { openCard } from '@Redux/slices/main/mainSlice';
 
 export type emergencyType = "high" | "low" | "normal";
 
@@ -28,6 +32,8 @@ const ListCard = ({
   cardId,
   image,
 }: ListCardProps) => {
+  const dispatch = useAppDispatch();
+
   const convertType = (emergency: string) => {
     switch (emergency) {
       case EmergencyTypeEnum.High:
@@ -41,8 +47,23 @@ const ListCard = ({
     }
   };
 
+  const handleClickOpenCard = () => {
+    dispatch(openCard({ id }));
+    dispatch(
+      openEditCardModal({
+        visible: true,
+        type: "edit",
+        width: 1000,
+        title: "編輯事項",
+      })
+    );
+  };
+
   return (
-    <div className="bg-white rounded-sm shadow-sm px-5 py-3 mb-1">
+    <div
+      className="bg-white rounded-sm shadow-sm px-5 py-3 mb-1"
+      onClick={handleClickOpenCard}
+    >
       <h3 className="text-slate-600 font-bold">{title}</h3>
       <div className="flex items-center">
         <div className="flex items-center space-x-3">

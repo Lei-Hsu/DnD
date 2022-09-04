@@ -15,6 +15,9 @@ export interface mainState {
       number: number;
       data: ListCardProps[];
     }[]
+  },
+  openCard: {
+    data: Partial<ListCardProps>;
   }
 }
 
@@ -116,6 +119,9 @@ const initialState: mainState = {
         ],
       },
     ]
+  },
+  openCard: {
+    data: {}
   }
 };
 
@@ -166,9 +172,29 @@ export const mainSlice = createSlice({
       copyState.data[0].data.push(newCard)
       state.dndList = copyState
     },
+    openCard: (state, action: PayloadAction<{ id: number }>) => {
+      const { id } = action.payload
+      const copyState = JSON.parse(JSON.stringify(state.dndList))
+      const cardIdMap = new Map(copyState.data.map((item: any) => item.data.map((subItem: ListCardProps) => [subItem.id, subItem])).flat(1))
+      const card = cardIdMap.get(id) as ListCardProps
+      state.openCard.data = card
+    },
+    clearOpenCard: (state) => {
+      state.openCard.data = {}
+    },
+    deleteCard: (state, action: PayloadAction<{ id: number }>) => {
+      const { id } = action.payload
+      const copyState = JSON.parse(JSON.stringify(state.dndList))
+
+      const list = copyState.data.find((item: any) => item.data.find((subItem: ListCardProps) => subItem.id === id))
+      const listIndex = copyState.data.findIndex((item: any) => item.id === list.id)
+
+      const card = list.data.filter((item: ListCardProps) => item.id !== id)
+      state.dndList.data[listIndex].data = card
+    }
   }
 });
 
-export const { dragListCard, addNewCard } = mainSlice.actions;
+export const { dragListCard, addNewCard, openCard, clearOpenCard, deleteCard } = mainSlice.actions;
 
 export default mainSlice.reducer;
