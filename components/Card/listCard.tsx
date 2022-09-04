@@ -64,7 +64,7 @@ const ListCard = ({
       className="bg-white rounded-sm shadow-sm px-5 py-3 mb-1"
       onClick={handleClickOpenCard}
     >
-      <h3 className="text-slate-600 font-bold">{title}</h3>
+      <h3 className="text-slate-600 font-bold break-all">{title}</h3>
       <div className="flex items-center">
         <div className="flex items-center space-x-3">
           {convertType(emergency)}

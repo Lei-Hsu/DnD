@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/hooks';
 
 import { DoubleLeftOutlined, LineOutlined } from '@ant-design/icons';
 import { closeEditCardModal } from '@Redux/slices/global/globalSlice';
-import { addNewCard, clearOpenCard, deleteCard } from '@Redux/slices/main/mainSlice';
+import { addNewCard, clearOpenCard, deleteCard, editCard } from '@Redux/slices/main/mainSlice';
 
 const EmergencyTypeOptions = [
   {
@@ -56,7 +56,12 @@ const EditCard = () => {
 
   const onFinish = (e: { title: string; emergency: emergencyType }) => {
     const { title, emergency } = e;
-    dispatch(addNewCard({ title, emergency }));
+    if (type === "create") {
+      dispatch(addNewCard({ title, emergency }));
+    }
+    if (type === "edit") {
+      dispatch(editCard({ id: cardData.id as number, title, emergency }));
+    }
     handleCloseModal();
   };
 

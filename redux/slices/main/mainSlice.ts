@@ -191,10 +191,25 @@ export const mainSlice = createSlice({
 
       const card = list.data.filter((item: ListCardProps) => item.id !== id)
       state.dndList.data[listIndex].data = card
+    },
+    editCard: (state, action: PayloadAction<{ id: number, title: string, emergency: emergencyType }>) => {
+      const { id, title, emergency } = action.payload
+      const copyState = JSON.parse(JSON.stringify(state.dndList))
+
+      const list = copyState.data.find((item: any) => item.data.find((subItem: ListCardProps) => subItem.id === id))
+      const listIndex = copyState.data.findIndex((item: any) => item.id === list.id)
+      let card = list.data.find((item: ListCardProps) => item.id === id)
+      const cardIndex = list.data.findIndex((item: any) => item.id === card.id)
+      card = {
+        ...card,
+        title,
+        emergency
+      }
+      state.dndList.data[listIndex].data[cardIndex] = card
     }
   }
 });
 
-export const { dragListCard, addNewCard, openCard, clearOpenCard, deleteCard } = mainSlice.actions;
+export const { dragListCard, addNewCard, openCard, clearOpenCard, deleteCard, editCard } = mainSlice.actions;
 
 export default mainSlice.reducer;
