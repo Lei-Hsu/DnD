@@ -22,16 +22,10 @@ export interface DropProps {
   source: { droppableId?: string; index?: number };
 }
 
-const Main = (props: any) => {
+const Main = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const dndList = useAppSelector((state: RootState) => state.main.dndList.data);
-
-  useEffect(() => {
-    if (props?.data) {
-      dispatch(getDndList(props?.data));
-    }
-  }, [dispatch, props]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -114,11 +108,9 @@ const Main = (props: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch("http://localhost:3000/api/main");
-  const data = await res.json();
   resetServerContext(); // 如果要使用 Drag and Drop 功能，必須加入此行
 
-  return { props: { data } };
+  return { props: { data: [] } };
 };
 
 export default Main;
