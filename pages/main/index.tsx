@@ -28,7 +28,9 @@ const Main = (props: any) => {
   const dndList = useAppSelector((state: RootState) => state.main.dndList.data);
 
   useEffect(() => {
-    dispatch(getDndList(props.data));
+    if (props?.data) {
+      dispatch(getDndList(props?.data));
+    }
   }, [dispatch, props]);
 
   const handleLogout = () => {
@@ -116,7 +118,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const data = await res.json();
   resetServerContext(); // 如果要使用 Drag and Drop 功能，必須加入此行
 
-  return { props: { data }, revalidate: 60 };
+  return { props: { data }, revalidate: 60, fallback: true };
 };
 
 export default Main;
