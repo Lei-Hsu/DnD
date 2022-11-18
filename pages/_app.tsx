@@ -9,7 +9,7 @@ import store from '../redux/store';
 import 'antd/dist/antd.css';
 import '@Style/globals.scss';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) { 
   return (
     <Provider store={store}>
       <Head>
